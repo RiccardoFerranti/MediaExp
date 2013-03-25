@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Lista con persistenza</title>
+        
+        <!-- metadato Viewport -->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <!-- importazione Cordova/PhoneGap -->
+        <script src="js/cordova-2.4.0.js"></script>
+
+        <!-- Bootstrap -->
+        <link rel="stylesheet" href="css/bootstrap.min.css">
+        <link rel="stylesheet" href="css/bootstrap-responsive.min.css">
+        <style>
+            #dopoScatto{
+                padding: 10px;
+                border:2px dashed gray;
+                margin-top: 20px;
+                display: none;
+            }
+        </style>
+        <script>
+            document.addEventListener("deviceready", function () {
+                document.getElementById('scatta').addEventListener("click", fotocamera);
+            })
+
+            function fotocamera(){
+                var opzioni = {
+                    quality: 100, //qualità
+                    econdingType: Camera.EncodingType.JPEG, //tipo di codifica
+                    sourceType: Camera.PictureSourceType.Camera, //usa la fotocamera
+                    destinationType: Camera.DestinationType.DATA_URL, // se voglio che mi restituisca dei dati o il riferimento dei file
+                    //destinationType: Camera.DestinationType.FILE_URI,
+                };
+
+                //Avvio la fotocamera
+                navigator.camera.getPicture(successo, errore, opzioni);
+
+                // se ho scattato e confermo la foto
+                function successo(datiImg){
+                    alert('hai scattato la foto');
+                    var dopoScatto = document.getElementById('dopoScatto');
+                    var foto = document.getElementById("foto");
+                    
+                    // Visualizzo l'area doposcatto
+                    dopoScatto.style.display = "block";
+                    
+                    // inserisco l'immagine nel tag
+                    foto.src = "data:image/jpeg;base64," + datiImg; 
+
+                    //foto.src = datiImg;
+                }
+
+                // se qualcosa è anadato storto o ho annullato l'operazione
+                function errore(messaggio){
+                    alert('qualcosa non va...');
+                    console.log(messaggio);
+                }
+            }
+        </script>
+    </head>
+    <body>
+        <div class="container">
+            <div class="row">
+                <h1 class="span12">Accedere alla fotocamera</h1>
+                <p class="span12">
+                    Non possiamo scattare qui ma possiamo richiamare la fotocamera nativa e in seguito scattare le foto
+                </p>
+            </div>
+            <div class="row">
+                <div class="span12">
+                    <!-- pee richiamare la fotocamera -->
+                    <button id="scatta" class="btn btn-primary btn-large btn-block">
+                        <i class="icon-white icon-camera"></i>
+                        scattauna foto
+                    </button>
+                    <!-- Dove visualizzeremo la foto -->
+                    <div id="dopoScatto">   
+                        <img src="" alt="" id="foto">
+                        <p>Ecco la foto appena scattata!</p>
+                    </div>  
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
